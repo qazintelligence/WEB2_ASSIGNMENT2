@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <style>
+        .container {
+            text-align: center;
+            margin: 0 auto;
+            max-width: 600px;
+            padding: 20px;
+        }
+        #result img {
+            width: 50px;
+            height: 50px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Simple Weather App</h1>
+    <form id="weather-form">
+        <input type="text" id="city" placeholder="Enter city name" required />
+        <button type="submit">Get Weather</button>
+    </form>
+    <div id="result"></div>
+</div>
+<script>
+    const form = document.getElementById("weather-form");
+    const result = document.getElementById("result");
+
+    form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const city = document.getElementById("city").value;
+        result.innerHTML = "<p>Loading...</p>";
+
+        try {
+            const weatherRes = await fetch(`http://localhost:3000/weather?city=${city}`);
+            const weatherData = await weatherRes.json();
+
+            if (weatherRes.ok) {
+                result.innerHTML = `
+                    <h2>Weather in ${weatherData.city}, ${weatherData.country}</h2>
+                    <p>Temperature: ${weatherData.temperature}°C</p>
+                    <p>Feels Like: ${weatherData.feels_like}°C</p>
+                    <p>Description: ${weatherData.description}</p>
+                    <img src="${weatherData.icon}" alt="Weather Icon">
+                    <p>Coordinates: Latitude: ${weatherData.coordinates.lat}, Longitude: ${weatherData.coordinates.lon}</p>
+                    <p>Humidity: ${weatherData.humidity}%</p>
+                    <p>Pressure: ${weatherData.pressure} hPa</p>
+                    <p>Wind Speed: ${weatherData.wind_speed} m/s</p>
+                    <h3>Top News:</h3>
+                    <ul>
+                        ${weatherData.news.map(article => `<li><a href="${article.url}" target="_blank">${article.title}</a></li>`).join('')}
+                    </ul>
+                `;
+            } else {
+                throw new Error(weatherData.error || "An error occurred");
+            }
+        } catch (error) {
+            result.innerHTML = `<p>Failed to fetch data. Error: ${error.message}</p>`;
+        }
+    });
+</script>
+</body>
+</html>
