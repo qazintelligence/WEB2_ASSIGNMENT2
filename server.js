@@ -2,7 +2,7 @@ const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
 const NewsAPI = require('newsapi');
-const newsapi = new NewsAPI('5559b82a7aca47c99d8b0d235df9e210');  // Your API key
+const newsapi = new NewsAPI('5559b82a7aca47c99d8b0d235df9e210');
 
 const app = express();
 const PORT = 3000;
