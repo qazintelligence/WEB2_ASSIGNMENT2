@@ -1,65 +1,173 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>Weather App</title>-->
+<!--    <style>-->
+<!--        .container {-->
+<!--            text-align: center;-->
+<!--            margin: 0 auto;-->
+<!--            max-width: 600px;-->
+<!--            padding: 20px;-->
+<!--        }-->
+<!--        #result img {-->
+<!--            width: 50px;-->
+<!--            height: 50px;-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div class="container">-->
+<!--    <h1>Simple Weather App</h1>-->
+<!--    <form id="weather-form">-->
+<!--        <input type="text" id="city" placeholder="Enter city name" required />-->
+<!--        <button type="submit">Get Weather</button>-->
+<!--    </form>-->
+<!--    <div id="result"></div>-->
+<!--</div>-->
+<!--<script>-->
+<!--    const form = document.getElementById("weather-form");-->
+<!--    const result = document.getElementById("result");-->
+
+<!--    form.addEventListener("submit", async (event) => {-->
+<!--        event.preventDefault();-->
+<!--        const city = document.getElementById("city").value;-->
+<!--        result.innerHTML = "<p>Loading...</p>";-->
+
+<!--        try {-->
+<!--            const weatherRes = await fetch(`http://localhost:3000/weather?city=${city}`);-->
+<!--            const weatherData = await weatherRes.json();-->
+
+<!--            if (weatherRes.ok) {-->
+<!--                result.innerHTML = `-->
+<!--                    <h2>Weather in ${weatherData.city}, ${weatherData.country}</h2>-->
+<!--                    <p>Temperature: ${weatherData.temperature}°C</p>-->
+<!--                    <p>Feels Like: ${weatherData.feels_like}°C</p>-->
+<!--                    <p>Description: ${weatherData.description}</p>-->
+<!--                    <img src="${weatherData.icon}" alt="Weather Icon">-->
+<!--                    <p>Coordinates: Latitude: ${weatherData.coordinates.lat}, Longitude: ${weatherData.coordinates.lon}</p>-->
+<!--                    <p>Humidity: ${weatherData.humidity}%</p>-->
+<!--                    <p>Pressure: ${weatherData.pressure} hPa</p>-->
+<!--                    <p>Wind Speed: ${weatherData.wind_speed} m/s</p>-->
+<!--                    <h3>Top News:</h3>-->
+<!--                    <ul>-->
+<!--                        ${weatherData.news.map(article => `<li><a href="${article.url}" target="_blank">${article.title}</a></li>`).join('')}-->
+<!--                    </ul>-->
+<!--                `;-->
+<!--            } else {-->
+<!--                throw new Error(weatherData.error || "An error occurred");-->
+<!--            }-->
+<!--        } catch (error) {-->
+<!--            result.innerHTML = `<p>Failed to fetch data. Error: ${error.message}</p>`;-->
+<!--        }-->
+<!--    });-->
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather App</title>
-    <style>
-        .container {
-            text-align: center;
-            margin: 0 auto;
-            max-width: 600px;
-            padding: 20px;
-        }
-        #result img {
-            width: 50px;
-            height: 50px;
-        }
-    </style>
+    <title>Weather & Timezone App</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
 </head>
-<body>
-<div class="container">
-    <h1>Simple Weather App</h1>
-    <form id="weather-form">
-        <input type="text" id="city" placeholder="Enter city name" required />
-        <button type="submit">Get Weather</button>
+<body class="bg-light">
+<div class="container py-5">
+    <h1 class="text-center mb-4">Weather & Timezone App</h1>
+
+    <!-- Weather Form -->
+    <h3>Get Weather Information</h3>
+    <form id="weatherForm" class="d-flex justify-content-center mb-3">
+        <input
+                type="text"
+                id="cityInput"
+                class="form-control w-50 me-2"
+                placeholder="Enter city name"
+                required
+        />
+        <button type="submit" class="btn btn-primary">Get Weather</button>
     </form>
-    <div id="result"></div>
+    <div id="weather" class="text-center">
+        <p>Enter a city name to get weather data</p>
+    </div>
+
+    <!-- Timezone Form -->
+    <h3>Get Current Time in a City</h3>
+    <form id="timezoneForm" class="d-flex justify-content-center mb-3">
+        <input
+                type="text"
+                id="timezoneInput"
+                class="form-control w-50 me-2"
+                placeholder="Enter city name (e.g., London)"
+                required
+        />
+        <button type="submit" class="btn btn-secondary">Get Time</button>
+    </form>
+    <div id="timezone" class="text-center">
+        <p>Enter a city name to get the current time</p>
+    </div>
 </div>
 <script>
-    const form = document.getElementById("weather-form");
-    const result = document.getElementById("result");
-
-    form.addEventListener("submit", async (event) => {
-        event.preventDefault();
-        const city = document.getElementById("city").value;
-        result.innerHTML = "<p>Loading...</p>";
+    // Weather Form Submission
+    document.getElementById("weatherForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const city = document.getElementById("cityInput").value;
 
         try {
-            const weatherRes = await fetch(`http://localhost:3000/weather?city=${city}`);
-            const weatherData = await weatherRes.json();
+            const response = await fetch(`/weather?city=${city}`);
+            const data = await response.json();
 
-            if (weatherRes.ok) {
-                result.innerHTML = `
-                    <h2>Weather in ${weatherData.city}, ${weatherData.country}</h2>
-                    <p>Temperature: ${weatherData.temperature}°C</p>
-                    <p>Feels Like: ${weatherData.feels_like}°C</p>
-                    <p>Description: ${weatherData.description}</p>
-                    <img src="${weatherData.icon}" alt="Weather Icon">
-                    <p>Coordinates: Latitude: ${weatherData.coordinates.lat}, Longitude: ${weatherData.coordinates.lon}</p>
-                    <p>Humidity: ${weatherData.humidity}%</p>
-                    <p>Pressure: ${weatherData.pressure} hPa</p>
-                    <p>Wind Speed: ${weatherData.wind_speed} m/s</p>
-                    <h3>Top News:</h3>
-                    <ul>
-                        ${weatherData.news.map(article => `<li><a href="${article.url}" target="_blank">${article.title}</a></li>`).join('')}
-                    </ul>
-                `;
+            if (response.ok) {
+                document.getElementById("weather").innerHTML = `
+                    <div class="card mx-auto" style="width: 18rem;">
+                        <img src="${data.icon}" class="card-img-top" alt="Weather Icon">
+                        <div class="card-body">
+                            <h5 class="card-title">${data.city}, ${data.country}</h5>
+                            <p class="card-text">
+                                <strong>Temperature:</strong> ${data.temperature}°C<br>
+                                <strong>Feels Like:</strong> ${data.feels_like}°C<br>
+                                <strong>Description:</strong> ${data.description}<br>
+                                <strong>Humidity:</strong> ${data.humidity}%<br>
+                                <strong>Pressure:</strong> ${data.pressure} hPa<br>
+                                <strong>Wind Speed:</strong> ${data.wind_speed} m/s<br>
+                                <strong>Coordinates:</strong> [${data.coordinates.lat}, ${data.coordinates.lon}]
+                            </p>
+                        </div>
+                    </div>`;
             } else {
-                throw new Error(weatherData.error || "An error occurred");
+                document.getElementById("weather").innerHTML = `<p class="text-danger">${data.error}</p>`;
             }
-        } catch (error) {
-            result.innerHTML = `<p>Failed to fetch data. Error: ${error.message}</p>`;
+        } catch (err) {
+            document.getElementById("weather").innerHTML = `<p class="text-danger">Error fetching data</p>`;
+        }
+    });
+
+    // Timezone Form Submission
+    document.getElementById("timezoneForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const city = document.getElementById("timezoneInput").value;
+
+        try {
+            const response = await fetch(`/timezone?city=${city}`);
+            const data = await response.json();
+
+            if (response.ok) {
+                document.getElementById("timezone").innerHTML = `
+                    <div class="alert alert-info">
+                        <h5>City: ${data.city}</h5>
+                        <p><strong>Time Zone:</strong> ${data.time_zone}</p>
+                        <p><strong>Current Time:</strong> ${data.current_time}</p>
+                    </div>`;
+            } else {
+                document.getElementById("timezone").innerHTML = `<p class="text-danger">${data.error}</p>`;
+            }
+        } catch (err) {
+            document.getElementById("timezone").innerHTML = `<p class="text-danger">Error fetching timezone data</p>`;
         }
     });
 </script>
