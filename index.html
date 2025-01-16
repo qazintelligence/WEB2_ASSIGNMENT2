@@ -80,7 +80,6 @@
 <div class="container py-5">
     <h1 class="text-center mb-4">Weather & Timezone App</h1>
 
-    <!-- Weather Form -->
     <h3>Get Weather Information</h3>
     <form id="weatherForm" class="d-flex justify-content-center mb-3">
         <input
@@ -96,7 +95,6 @@
         <p>Enter a city name to get weather data</p>
     </div>
 
-    <!-- Timezone Form -->
     <h3>Get Current Time in a City</h3>
     <form id="timezoneForm" class="d-flex justify-content-center mb-3">
         <input
@@ -113,7 +111,6 @@
     </div>
 </div>
 <script>
-    // Weather Form Submission
     document.getElementById("weatherForm").addEventListener("submit", async (e) => {
         e.preventDefault();
         const city = document.getElementById("cityInput").value;
@@ -147,7 +144,6 @@
         }
     });
 
-    // Timezone Form Submission
     document.getElementById("timezoneForm").addEventListener("submit", async (e) => {
         e.preventDefault();
         const city = document.getElementById("timezoneInput").value;
